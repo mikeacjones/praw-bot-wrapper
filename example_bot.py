@@ -19,13 +19,12 @@ def secrets(subreddit):
 
 SUBREDDIT_NAME = os.environ["SUBREDDIT_NAME"]
 SECRETS = secrets(SUBREDDIT_NAME)
-BOT = praw_bot_wrapper.bot(
-    SECRETS["REDDIT_CLIENT_ID"],
-    SECRETS["REDDIT_CLIENT_SECRET"],
-    SECRETS["REDDIT_USER_AGENT"],
-    SECRETS["REDDIT_USERNAME"],
-    SECRETS["REDDIT_PASSWORD"],
-    outage_threshold=10,
+BOT = praw.Reddit(
+    client_id=SECRETS["REDDIT_CLIENT_ID"],
+    client_secret=SECRETS["REDDIT_CLIENT_SECRET"],
+    user_agent=SECRETS["REDDIT_USER_AGENT"],
+    username=SECRETS["REDDIT_USERNAME"],
+    password=SECRETS["REDDIT_PASSWORD"],
 )
 CURRENT_MODS = [str(mod) for mod in BOT.subreddit(SUBREDDIT_NAME).moderator()]
 
@@ -52,7 +51,7 @@ def handle_inbox(message):
     message.mark_read()
 
 
-@praw_bot_wrapper.outage_recovery_handler
+@praw_bot_wrapper.outage_recovery_handler(outage_threshold=10)
 def notify_outage_recovery(started_at):
     print(f"An outage that started at {started_at} has recovered")
     send_message_to_mods(
