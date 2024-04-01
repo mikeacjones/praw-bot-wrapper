@@ -29,7 +29,11 @@ _streams = {}
 _recovery_handlers = []
 
 
-def outage_recovery_handler(outage_threshold):
+def outage_recovery_handler(**kwargs):
+    outage_threshold = (
+        10 if "outage_threshold" not in kwargs else int(kwargs["outage_threshold"])
+    )
+
     def __call__(handler):
         _recovery_handlers.append((handler, outage_threshold))
         return handler
