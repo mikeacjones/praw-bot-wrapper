@@ -45,8 +45,6 @@ def _notify_outage_recovery(start_time, error_count):
 
 def stream_handler(generator_func):
     def __call__(handler):
-        # handler = list(args)[0]
-
         if generator_func not in _streams:
             _streams[generator_func] = (
                 generator_func(pause_after=-1),
