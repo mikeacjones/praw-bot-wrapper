@@ -31,14 +31,14 @@ _recovery_handlers = []
 
 def outage_recovery_handler(outage_threshold):
     def __call__(handler):
-        _outage_threshold = outage_threshold
-        _recovery_handlers.append((handler,outage_threshold))
+        _recovery_handlers.append((handler, outage_threshold))
         return handler
+
     return __call__
 
 
 def _notify_outage_recovery(start_time, error_count):
-    for (handler, outage_threshold) in _recovery_handlers:
+    for handler, outage_threshold in _recovery_handlers:
         if error_count >= outage_threshold:
             handler(start_time)
 
